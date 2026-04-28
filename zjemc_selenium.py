@@ -40,11 +40,14 @@ def get_zjemc(web_url, usr, pwd):
         select_btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".right_header .el-input__inner")))
         select_btn.click()
         old_text = driver.find_element(By.CSS_SELECTOR, ".right_list .list_row").text   # 记录旧数据,等待数据更新后替换
-            
+
         # 1.2点击[省控站点] in [城市、区县、国控站点、省控站点]
         # option = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//li/span[text()='省控站点']")))
         option = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//ul[contains(@class,'el-select-dropdown__list')]//span[text()='省控站点']")))
-        option.click()
+        # option.click()
+        time.sleep(1.0)
+        # 用 JS 点击（绕过遮挡问题，最稳）
+        driver.execute_script("arguments[0].click();", option)
         WebDriverWait(driver, 30).until(lambda d: d.find_element(By.CSS_SELECTOR, ".right_list .list_row").text != old_text)  # 等待数据刷新
         
         # 1.3 选择不同要素
