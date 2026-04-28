@@ -85,7 +85,7 @@ def get_zjemc(web_url, usr, pwd):
         timestamp = dt.strftime(format="%Y-%m-%dT%H")
         daily_folder = Path('Archive')/timestamp[:10]
         daily_folder.mkdir(parents=True, exist_ok=True)
-        out_df.to_csv(daily_folder/(timestamp+'.csv'),index=None, mode='w')
+        out_df.to_csv(daily_folder/(timestamp+'.csv'), mode='w')
     except Exception as e:
         print(f"Error as: {traceback.format_exc()}")
     finally:
