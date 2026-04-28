@@ -27,13 +27,9 @@ jobs:
           pip install selenium webdriver-manager pandas requests
 
       # 4️⃣ 安装 Chrome + driver（关键）
-      - name: Install Chrome
+      - name: Check Chrome
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          google-chrome --version || true
 
       # 5️⃣ 运行脚本
       - name: Run crawler
