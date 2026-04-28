@@ -9,6 +9,7 @@ import hashlib
 # third-party lib
 import pandas as pd
 import numpy as np
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -25,13 +26,11 @@ def get_zjemc(web_url, usr, pwd):
     driver = None
     try:
         options = webdriver.ChromeOptions()
-        options.binary_location = "/usr/bin/chromium-browser"
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
-        service = Service("/usr/local/bin/chromedriver")  #  /usr/local/bin/chromedriver, 
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(web_url)
 
         # === 1. 触发省控站点 ===
