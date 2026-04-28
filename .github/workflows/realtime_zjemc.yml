@@ -39,3 +39,19 @@ jobs:
       - name: Run crawler
         run: |
           python zjemc_selenium.py
+      - name: Commit changes if any
+        run: |
+          git config --global user.email "BOT@github.com"
+          git config --global user.name "githubBOT"
+          git add .
+          git diff --cached --quiet || git commit -m "update realtime data" -a
+          # git commit -m "update realtime data" -a
+      - name: Who am I (git)
+        run: |
+          git remote -v
+          git config --get user.name
+          git config --get user.email
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{secrets.GTOKEN}}
