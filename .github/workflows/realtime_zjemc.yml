@@ -38,4 +38,4 @@ jobs:
       # 5️⃣ 运行脚本
       - name: Run crawler
         run: |
-          python crawler.py
+          python zjemc_selenium.py
