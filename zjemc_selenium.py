@@ -5,6 +5,7 @@ import pdb, traceback
 import random
 import time
 import hashlib
+from pathlib import Path
 
 # third-party lib
 import pandas as pd
@@ -78,11 +79,13 @@ def get_zjemc(web_url, usr, pwd):
         out_df = out_df.sort_values(by='city')
         file_name = driver.find_element(By.CSS_SELECTOR, ".publish_time_view span:last-of-type").text.replace(" 时", "时")
         dt = pd.to_datetime(file_name.replace("时", ""), format="%Y-%m-%d %H")
-
         out_df['time'] = dt
-        out_df.to_csv(os.path.join(script_dir, 'tmp_data_zjemc', f"{dt}.csv"), index=True, encoding='utf-8-sig')
-        #print(f"Lev1 Site: ZJEMC Data Download Over: {file_name[:-1]}.")
-        return out_df
+        
+        # 将每小时数据保存为 csv 文件
+        timestamp = dt.strftime(format="%Y-%m-%dT%H")
+        daily_folder = Path('Archive')/timestamp[:10]
+        daily_folder.mkdir(parents=True, exist_ok=True)
+        df_.to_csv(daily_folder/(timestamp+'.csv'),index=None, mode='w')
     except Exception as e:
         print(f"Error as: {traceback.format_exc()}")
     finally:
