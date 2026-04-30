@@ -1,4 +1,4 @@
-name: ZJEMC_Realtime_Update
+name: ZJEMC_Selenium_Update
 
 on:
   # schedule:
