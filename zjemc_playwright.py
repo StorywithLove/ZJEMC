@@ -11,7 +11,12 @@ def get_decrypted_aqi_data():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        
+
+        # 模拟真人浏览器（可选，但更安全）
+        page.set_extra_http_headers({
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Referer": "https://www.baidu.com/"
+        })
         # 打开页面
         page.goto("https://aqi.zjemc.org.cn/", timeout=60000)
         page.wait_for_selector(".marker_container", timeout=30000)
