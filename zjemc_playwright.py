@@ -39,12 +39,18 @@ def get_decrypted_aqi_data():
                 }
                 return dataList;
             }""")
-        
+        browser.close()
         # 输出结果
         print("✅ 成功获取解密后的实时数据：")
         df = pd.DataFrame(data_list)
+        df['time'] = pd.to_datetime(df.evatime) 
+        df = df.drop(['evatime'], axis=1)
 
-        browser.close()
+        timestamp = data_df.time.iloc[0].strftime(format="%Y-%m-%dT%H")
+        daily_folder = Path('Archive')/timestamp[:10]
+        daily_folder.mkdir(parents=True, exist_ok=True)
+        out_df.to_csv(daily_folder/(timestamp+'.csv'), mode='w')
+        
         return df
 
 if __name__ == "__main__":
