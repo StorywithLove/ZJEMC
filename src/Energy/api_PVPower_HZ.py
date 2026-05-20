@@ -20,15 +20,17 @@ PROJECT_DIR = Path(os.getenv("GITHUB_WORKSPACE", "")).resolve() if os.getenv("GI
 PVPower_DIR = PROJECT_DIR / "Archive" / "PVPower"
 LOCAL_TZ = ZoneInfo("Asia/Shanghai")
 
+site_name_1 = os.getenv("SITE_NAME_1") or os.getenv("site_name_1")
+site_name_2 = os.getenv("SITE_NAME_2") or os.getenv("site_name_2")
 STATIONS = [
     {
-        "column": "欧伦",
-        "station_name": "欧伦1.3835MWp分布式光伏发电系统",
+        "column": site_name_1,
+        "station_name": f"{site_name_1}1.3835MWp分布式光伏发电系统",
         "station_id": "1299184320438401096",
     },
     {
-        "column": "鸿旺",
-        "station_name": "鸿旺1.582MWp分布式光伏发电系统",
+        "column": site_name_2,
+        "station_name": f"{site_name_2}1.582MWp分布式光伏发电系统",
         "station_id": "1299184320438147269",
     },
 ]
@@ -120,7 +122,7 @@ def merge_station_day_tables(station_tables, cur_date):
     """
     day_index = pd.date_range(f"{cur_date} 00:00", periods=96, freq="15min")
     merged_df = pd.concat(station_tables, axis=1).reindex(day_index)
-    merged_df = merged_df[["鸿旺", "欧伦"]]
+    merged_df = merged_df[[site_name_2, site_name_1]]
     merged_df.index.name = "时间"
     return merged_df
 
@@ -293,13 +295,13 @@ def main():
     args = parse_args()
     username = os.getenv("GLC_USR") or os.getenv("glc_usr")
     password = os.getenv("GLC_PWD") or os.getenv("glc_pwd")
-    glc_host = os.getenv("GLC_WEB_URL") or os.getenv("glc_web_url")
+    glc_web_url = os.getenv("GLC_WEB_URL") or os.getenv("glc_web_url")
     if not username or not password:
         raise EnvironmentError("Please set GLC_USR/GLC_PWD or glc_usr/glc_pwd environment variables.")
 
     date_list = build_date_list(args.start_date, args.end_date)
     logging.info("dates: %s", ", ".join(date_list))
-    request_template = capture_add_chart_request(glc_host, username, password, headless=not args.headed)
+    request_template = capture_add_chart_request(glc_web_url, username, password, headless=not args.headed)
     for cur_date in date_list:
         save_day_power(request_template, cur_date)
 
